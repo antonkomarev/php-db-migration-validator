@@ -13,7 +13,7 @@ $argumentsCount = count($argv);
 if ($argumentsCount === 1) {
     echo 'Missing `migrations-directory-path` argument' . PHP_EOL;
     exit(2);
-} elseif ($argumentsCount != 2) {
+} elseif ($argumentsCount !== 2) {
     echo "Too many arguments provided, value `$argv[2]` is redundant" . PHP_EOL;
     exit(2);
 }
