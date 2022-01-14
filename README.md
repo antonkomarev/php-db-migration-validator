@@ -11,7 +11,7 @@ php composer require antonkomarev/php-database-migration-validator
 ## Usage
 
 ```php
-php7.4 vendor/bin/php-database-migrations-validator irreversible database/migrations/
+php7.4 vendor/bin/php-database-migration-validator irreversible database/migrations/
 ```
 
 ## License
