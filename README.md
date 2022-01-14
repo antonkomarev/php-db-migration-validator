@@ -10,6 +10,8 @@ php composer require antonkomarev/php-database-migration-validator
 
 ## Usage
 
+### Validate migrations are irreversible
+
 ```php
 php vendor/bin/php-database-migration-validator irreversible database/migrations/
 ```
