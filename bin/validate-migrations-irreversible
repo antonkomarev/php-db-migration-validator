@@ -1,0 +1,29 @@
+#!/usr/bin/env php
+<?php
+
+use AK\DatabaseMigrationValidator\IrreversibleMigrationsValidator;
+
+if (!in_array(PHP_SAPI, ['cli', 'phpdbg', 'embed'], true)) {
+    echo 'Warning: The console should be invoked via the CLI version of PHP, not the ' . PHP_SAPI . ' SAPI' . PHP_EOL;
+    exit(2);
+}
+
+$argumentsCount = count($argv);
+
+if ($argumentsCount === 1) {
+    echo 'Missing `migrations-directory-path` argument' . PHP_EOL;
+    exit(2);
+} elseif ($argumentsCount != 2) {
+    echo "Too many arguments provided, value `$argv[2]` is redundant" . PHP_EOL;
+    exit(2);
+}
+
+require dirname(__DIR__) . '/vendor/autoload.php';
+
+$migrationsDirectoryPath = rtrim($argv[1], '/');
+
+$exitCode = (new IrreversibleMigrationsValidator())($migrationsDirectoryPath);
+
+echo PHP_EOL . 'Exit code: ' . $exitCode . PHP_EOL;
+
+exit($exitCode);

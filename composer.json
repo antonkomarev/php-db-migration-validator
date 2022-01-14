@@ -1,0 +1,44 @@
+{
+    "name": "antonkomarev/php-database-migration-validator",
+    "description": "Validate PHP database migration files",
+    "type": "library",
+    "license": "MIT",
+    "keywords": [
+        "database",
+        "migration",
+        "validation"
+    ],
+    "authors": [
+        {
+            "name": "Anton Komarev",
+            "email": "anton@komarev.com",
+            "homepage": "https://komarev.com",
+            "role": "Developer"
+        }
+    ],
+    "homepage": "https://komarev.com/sources/php-database-migration-validator",
+    "support": {
+        "email": "open@cybercog.su",
+        "issues": "https://github.com/antonkomarev/php-database-migration-validator/issues",
+        "source": "https://github.com/cybercog/php-database-migration-validator",
+        "docs": "https://github.com/cybercog/php-database-migration-validator"
+    },
+    "require": {
+        "php": "^7.1|^8.0",
+        "nikic/php-parser": "^4.13"
+    },
+    "require-dev": {
+    },
+    "autoload": {
+        "psr-4": {
+            "AK\\DatabaseMigrationValidator\\": "src/"
+        }
+    },
+    "autoload-dev": {
+    },
+    "config": {
+        "sort-packages": true
+    },
+    "minimum-stability": "dev",
+    "prefer-stable" : true
+}
