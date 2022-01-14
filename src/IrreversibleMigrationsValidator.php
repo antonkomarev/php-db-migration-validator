@@ -24,6 +24,8 @@ final class IrreversibleMigrationsValidator
     public function __invoke(
         string $migrationsDirectoryPath
     ): int {
+        $migrationsDirectoryPath = rtrim($migrationsDirectoryPath, '/');
+
         if (is_dir($migrationsDirectoryPath) === false) {
             $this->printLine("Migrations directory path `$migrationsDirectoryPath` is not a directory");
 
@@ -173,8 +175,9 @@ final class IrreversibleMigrationsValidator
      * @param array<Stmt> $statements
      * @return array<ClassMethod>
      */
-    private function findClassMethods(array $statements): array
-    {
+    private function findClassMethods(
+        array $statements
+    ): array {
         $nodeFinder = new NodeFinder();
 
         return $nodeFinder->findInstanceOf($statements, ClassMethod::class);
@@ -200,7 +203,7 @@ final class IrreversibleMigrationsValidator
     {
         $this->printLine("Each irreversible migration file should have following code:" . PHP_EOL);
         $this->printLine(
-<<<EXAMPLE
+            <<<EXAMPLE
 public function down(): void
 {
     throw new \Exception('This migration is irreversible and cannot be reverted.');
@@ -216,7 +219,7 @@ EXAMPLE
     }
 
     /**
-     * Alternative to PHP8 method `str_ends_with`.
+     * Polyfill of PHP8 method `str_ends_with`.
      */
     private function isStringEndsWith(
         string $haystack,

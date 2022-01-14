@@ -27,17 +27,18 @@ defined('STDERR') or define('STDERR', fopen('php://stderr', 'w'));
 
 $command = null;
 $inputDirectoryPath = null;
-foreach ($argv as $k => $arg) {
-    if ($k === 0) {
+foreach ($argv as $key => $argument) {
+    if ($key === 0) {
         continue;
     }
 
     if ($command === null) {
-        $command = $arg;
+        $command = $argument;
+        continue;
     }
 
-    if ($k === 2) {
-        $inputDirectoryPath = rtrim($arg, '/');
+    if ($key === 2) {
+        $inputDirectoryPath = $argument;
     }
 }
 
