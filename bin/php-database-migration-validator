@@ -42,6 +42,13 @@ foreach ($argv as $key => $argument) {
     }
 }
 
+if ($command === null) {
+    echo 'Missing command' . PHP_EOL;
+    // TODO: Add usage method
+
+    exit(2);
+}
+
 if ($inputDirectoryPath === null) {
     echo 'Missing `migrations-directory-path` argument' . PHP_EOL;
 
