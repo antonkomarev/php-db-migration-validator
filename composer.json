@@ -36,6 +36,9 @@
     },
     "autoload-dev": {
     },
+    "bin": [
+        "bin/validate-migrations-irreversible"
+    ],
     "config": {
         "sort-packages": true
     },

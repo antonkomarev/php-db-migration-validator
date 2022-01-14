@@ -8,6 +8,23 @@ if (!in_array(PHP_SAPI, ['cli', 'phpdbg', 'embed'], true)) {
     exit(2);
 }
 
+$composerAutoload = [
+    __DIR__ . '/../vendor/autoload.php', // standalone with "composer install" run
+    __DIR__ . '/../../../autoload.php',  // script is installed as a composer binary
+];
+foreach ($composerAutoload as $autoload) {
+    if (file_exists($autoload)) {
+        require($autoload);
+        break;
+    }
+}
+
+// Send all errors to stderr
+ini_set('display_errors', 'stderr');
+// open streams if not in CLI sapi
+defined('STDOUT') or define('STDOUT', fopen('php://stdout', 'w'));
+defined('STDERR') or define('STDERR', fopen('php://stderr', 'w'));
+
 $argumentsCount = count($argv);
 
 if ($argumentsCount === 1) {
@@ -18,12 +35,8 @@ if ($argumentsCount === 1) {
     exit(2);
 }
 
-require dirname(__DIR__) . '/vendor/autoload.php';
-
 $migrationsDirectoryPath = rtrim($argv[1], '/');
 
 $exitCode = (new IrreversibleMigrationsValidator())($migrationsDirectoryPath);
-
-echo PHP_EOL . 'Exit code: ' . $exitCode . PHP_EOL;
 
 exit($exitCode);
