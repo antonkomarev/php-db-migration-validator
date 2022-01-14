@@ -25,18 +25,34 @@ ini_set('display_errors', 'stderr');
 defined('STDOUT') or define('STDOUT', fopen('php://stdout', 'w'));
 defined('STDERR') or define('STDERR', fopen('php://stderr', 'w'));
 
-$argumentsCount = count($argv);
+$command = null;
+$inputDirectoryPath = null;
+foreach ($argv as $k => $arg) {
+    if ($k === 0) {
+        continue;
+    }
 
-if ($argumentsCount === 1) {
+    if ($command === null) {
+        $command = $arg;
+    }
+
+    if ($k === 2) {
+        $inputDirectoryPath = rtrim($arg, '/');
+    }
+}
+
+if ($inputDirectoryPath === null) {
     echo 'Missing `migrations-directory-path` argument' . PHP_EOL;
-    exit(2);
-} elseif ($argumentsCount !== 2) {
-    echo "Too many arguments provided, value `$argv[2]` is redundant" . PHP_EOL;
+
     exit(2);
 }
 
-$migrationsDirectoryPath = rtrim($argv[1], '/');
+switch ($command) {
+    case 'irreversible':
+        $exitCode = (new IrreversibleMigrationsValidator())($inputDirectoryPath);
 
-$exitCode = (new IrreversibleMigrationsValidator())($migrationsDirectoryPath);
-
-exit($exitCode);
+        exit($exitCode);
+    default:
+        echo "Unknown command `$command`" . PHP_EOL;
+        exit(2);
+}

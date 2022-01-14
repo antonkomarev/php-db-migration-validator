@@ -37,7 +37,7 @@
     "autoload-dev": {
     },
     "bin": [
-        "bin/validate-migrations-irreversible"
+        "bin/php-database-migrations-validator"
     ],
     "config": {
         "sort-packages": true
