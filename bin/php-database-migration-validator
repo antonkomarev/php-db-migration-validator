@@ -25,14 +25,16 @@ ini_set('display_errors', 'stderr');
 defined('STDOUT') or define('STDOUT', fopen('php://stdout', 'w'));
 defined('STDERR') or define('STDERR', fopen('php://stderr', 'w'));
 
+$binaryPath = null;
 $command = null;
 $inputPath = null;
 foreach ($argv as $key => $argument) {
     if ($key === 0) {
+        $binaryPath = $argument;
         continue;
     }
 
-    if ($command === null) {
+    if ($key === 1) {
         $command = $argument;
         continue;
     }
@@ -45,33 +47,33 @@ foreach ($argv as $key => $argument) {
 switch ($command) {
     case 'irreversible':
         if ($inputPath === null) {
-            error('Missing `input-path` argument');
-
+            printError('Missing `input-path` argument');
             exit(2);
         }
 
         $exitCode = (new IrreversibleMigrationsValidator())($inputPath);
-
         exit($exitCode);
     case 'help':
-        usage();
+        usage($binaryPath);
         exit(0);
     case null:
-        error('No command specified.', 'usage');
+        printError('No command specified.');
+        usage($binaryPath);
         exit(2);
     default:
-        error("Unknown command `$command`", 'usage');
+        printError("Unknown command `$command`");
+        usage($binaryPath);
         exit(2);
 }
 
 /**
  * Display usage information.
  */
-function usage(): void
-{
-    global $argv;
-    $binaryName = basename($argv[0]);
-    printFormatted(
+function usage(
+    string $binaryPath
+): void {
+    $binaryName = basename($binaryPath);
+    printFormattedMessageToStream(
         <<<EOF
 Usage:
   $binaryName \B<command>\C [\Y<input-path>\C]
@@ -87,24 +89,13 @@ EOF
     );
 }
 
-/**
- * Send custom error message to STDERR.
- *
- * @param string $message
- * @param mixed $callback called before script exit
- * @return void
- */
-function error(
-    string $message,
-    $callback = null
+function printError(
+    string $message
 ) {
-    printFormatted("\B\RError\C: " . escapeFormatted($message) . PHP_EOL, STDERR);
-
-    if (is_callable($callback)) {
-        call_user_func($callback);
-    }
-
-    exit(1);
+    printFormattedMessageToStream(
+        "\B\RError\C: " . escapeFormatted($message) . PHP_EOL,
+        STDERR
+    );
 }
 
 /**
@@ -112,7 +103,7 @@ function error(
  * @param resource $stream
  * @return void
  */
-function printFormatted(
+function printFormattedMessageToStream(
     string $string,
     $stream
 ): void {
