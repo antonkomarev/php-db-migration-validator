@@ -32,7 +32,7 @@ php vendor/bin/php-db-migration-validator --rule=irreversible migrations/file.ph
 php vendor/bin/php-db-migration-validator --rule=irreversible migrations/file.php migrations/file2.php
 ```
 
-**Validate file by wildcard**
+**Validate many files by wildcard**
 
 ```shell
 php vendor/bin/php-db-migration-validator --rule=irreversible migrations/2022_*
