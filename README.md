@@ -29,7 +29,7 @@ php vendor/bin/php-database-migration-validator irreversible database/migrations
 **Validate single file**
 
 ```shell
-php vendor/bin/php-database-migration-validator irreversible database/migrations/example_migration.php
+php vendor/bin/php-database-migration-validator irreversible database/migrations/example.php
 ```
 
 ## License
