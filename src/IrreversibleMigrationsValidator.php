@@ -26,7 +26,7 @@ final class IrreversibleMigrationsValidator
         string $inputPath
     ): int {
         try {
-            $filePathList = $this->listFilePaths($inputPath);
+            $filePathList = (new FileFinder())->findInPath($inputPath);
         } catch (Exception $exception) {
             $this->printLine($exception->getMessage());
 
@@ -66,83 +66,6 @@ final class IrreversibleMigrationsValidator
         }
 
         return self::EXIT_CODE_SUCCESS;
-    }
-
-    /**
-     * @param string $inputPath
-     * @return array<string>
-     */
-    private function listFilePaths(
-        string $inputPath
-    ): array {
-        if (file_exists($inputPath) === false) {
-            throw new RuntimeException(
-                "Migration path `$inputPath` is not a directory or file"
-            );
-        }
-
-        if (is_file($inputPath)) {
-            return [
-                $inputPath,
-            ];
-        }
-
-        $inputPath = rtrim($inputPath, '/');
-
-        $fileNameList = scandir($inputPath);
-
-        $fileNameList = $this->filterMigrationFiles($fileNameList);
-
-        return $this->prependDirectoryPathToFileNameList($fileNameList, $inputPath);
-    }
-
-    /**
-     * @param array<string> $fileNameList
-     * @return array<string>
-     */
-    private function filterMigrationFiles(
-        array $fileNameList
-    ): array {
-        $result = [];
-
-        foreach ($fileNameList as $fileName) {
-            if ($fileName === '.' || $fileName === '..') {
-                continue;
-            }
-
-            if ($this->isStringEndsWith($fileName, '.php') === false) {
-                continue;
-            }
-
-            $result[] = $fileName;
-        }
-
-        return $result;
-    }
-
-    /**
-     * @param array<string> $fileNameList
-     * @param string $directoryPath
-     * @return array<string>
-     */
-    private function prependDirectoryPathToFileNameList(
-        array $fileNameList,
-        string $directoryPath
-    ): array {
-        $filePathList = [];
-
-        foreach ($fileNameList as $fileName) {
-            $filePathList[] = $this->prependDirectoryPath($fileName, $directoryPath);
-        }
-
-        return $filePathList;
-    }
-
-    private function prependDirectoryPath(
-        string $fileName,
-        string $fileDirectoryPath
-    ): string {
-        return $fileDirectoryPath . '/' . $fileName;
     }
 
     private function getFileCode(
@@ -257,16 +180,5 @@ EXAMPLE
     private function printLineSeparator(): void
     {
         $this->printLine(str_pad('', 20, '-'));
-    }
-
-    /**
-     * Polyfill of PHP8 method `str_ends_with`.
-     */
-    private function isStringEndsWith(
-        string $haystack,
-        string $needle
-    ): bool {
-        $needleLength = strlen($needle);
-        return ($needleLength === 0 || substr_compare($haystack, $needle, -$needleLength) === 0);
     }
 }
