@@ -1,5 +1,7 @@
 # PHP Database Migration Validator
 
+![php-database-migration-validator](https://user-images.githubusercontent.com/1849174/149601314-548f6a06-e870-4893-a3c5-5b259f505bbd.gif)
+
 ## Installation
 
 Pull in the package through Composer.
@@ -12,7 +14,7 @@ php composer require antonkomarev/php-database-migration-validator
 
 ### Validate migrations are irreversible
 
-```php
+```shell
 php vendor/bin/php-database-migration-validator irreversible database/migrations/
 ```
 
