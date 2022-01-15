@@ -21,7 +21,7 @@ and the next execution of `php artisan migrate` will call the `up` method again.
 To prevent this behavior, all migrations should have `down` method that will throw an Exception, nothing more.
 
 PHP DB Migration Validator checks whether all migration files meet this requirement.
-You can add it to the server's git hooks to prevent migration rollback, or add validation to CI.
+You can add it to the server's git hooks to prevent migration rollback, or add validation step to CI.
 
 ## Installation
 
