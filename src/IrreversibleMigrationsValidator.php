@@ -13,7 +13,6 @@ use PhpParser\Node\Stmt\ClassMethod;
 use PhpParser\Node\Stmt\Throw_;
 use PhpParser\NodeFinder;
 use PhpParser\ParserFactory;
-use RuntimeException;
 
 final class IrreversibleMigrationsValidator
 {
