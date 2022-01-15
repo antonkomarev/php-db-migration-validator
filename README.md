@@ -8,6 +8,13 @@
 <a href="https://github.com/antonkomarev/php-db-migration-validator/blob/master/LICENSE"><img src="https://img.shields.io/github/license/antonkomarev/php-db-migration-validator.svg?style=flat-square" alt="License"></a>
 </p>
 
+## Introduction
+
+It is standard practice to make database migrations irreversible.
+Migrations should be backward compatible and only go forward.
+This tool checks if all migration files fulfil this requirement.
+You can add it to the server's git hooks to prevent migrations from rolling back, or add validation to CI. 
+
 ## Installation
 
 Pull in the package through Composer.
