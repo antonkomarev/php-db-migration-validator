@@ -26,7 +26,7 @@ defined('STDOUT') or define('STDOUT', fopen('php://stdout', 'w'));
 defined('STDERR') or define('STDERR', fopen('php://stderr', 'w'));
 
 $command = null;
-$inputDirectoryPath = null;
+$inputPath = null;
 foreach ($argv as $key => $argument) {
     if ($key === 0) {
         continue;
@@ -38,29 +38,105 @@ foreach ($argv as $key => $argument) {
     }
 
     if ($key === 2) {
-        $inputDirectoryPath = $argument;
+        $inputPath = $argument;
     }
-}
-
-if ($command === null) {
-    echo 'Missing command' . PHP_EOL;
-    // TODO: Add usage method
-
-    exit(2);
-}
-
-if ($inputDirectoryPath === null) {
-    echo 'Missing `migrations-directory-path` argument' . PHP_EOL;
-
-    exit(2);
 }
 
 switch ($command) {
     case 'irreversible':
-        $exitCode = (new IrreversibleMigrationsValidator())($inputDirectoryPath);
+        if ($inputPath === null) {
+            error('Missing `input-path` argument');
+
+            exit(2);
+        }
+
+        $exitCode = (new IrreversibleMigrationsValidator())($inputPath);
 
         exit($exitCode);
-    default:
-        echo "Unknown command `$command`" . PHP_EOL;
+    case 'help':
+        usage();
+        exit(0);
+    case null:
+        error('No command specified.', 'usage');
         exit(2);
+    default:
+        error("Unknown command `$command`", 'usage');
+        exit(2);
+}
+
+/**
+ * Display usage information.
+ */
+function usage(): void
+{
+    global $argv;
+    $binaryName = basename($argv[0]);
+    printFormatted(
+        <<<EOF
+Usage:
+  $binaryName \B<command>\C [\Y<input-path>\C]
+  The following commands are available:
+    \Birreversible\C  Validates the database migration(s) in the specified \Ginput-path\C are irreversible.
+                  The tool will try to check if migration file has `down` method and this method throws an Exception.
+                  Exits with code 1 on validation errors, 2 on other errors and 0 on success.
+    \Bhelp\C          Shows this usage information.
+
+EOF
+        ,
+        STDERR
+    );
+}
+
+/**
+ * Send custom error message to STDERR.
+ *
+ * @param string $message
+ * @param mixed $callback called before script exit
+ * @return void
+ */
+function error(
+    string $message,
+    $callback = null
+) {
+    printFormatted("\B\RError\C: " . escapeFormatted($message) . PHP_EOL, STDERR);
+
+    if (is_callable($callback)) {
+        call_user_func($callback);
+    }
+
+    exit(1);
+}
+
+/**
+ * @param string $string
+ * @param resource $stream
+ * @return void
+ */
+function printFormatted(
+    string $string,
+    $stream
+): void {
+    fwrite($stream, formatString($string));
+}
+
+function formatString(
+    string $string
+): string {
+    return strtr(
+        $string,
+        [
+            '\\R' => "\033[31m", // red
+            '\\G' => "\033[32m", // green
+            '\\B' => "\033[1m", // bold
+            '\\Y' => "\033[33m", // yellow
+            '\\C' => "\033[0m", // clear
+            '\\\\' => '\\',
+        ]
+    );
+}
+
+function escapeFormatted(
+    string $string
+): string {
+    return strtr($string, ['\\' => '\\\\']);
 }
