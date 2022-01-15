@@ -70,6 +70,13 @@ if ($command === 'help') {
 
 if ($inputPaths === []) {
     printError('Missing `path` argument');
+    printUsage($binaryPath);
+    exit(2);
+}
+
+if ($validationRules === []) {
+    printError('No validation rules specified, at least one `--rule=<rule>` must be provided');
+    printUsage($binaryPath);
     exit(2);
 }
 
@@ -108,6 +115,7 @@ Usage:
     \Y--rules=<rule>\C   Validates the database migration(s) in the specified \Gpath\C are irreversible.
                      The tool will try to check if migration file has `down` method and this method throws an Exception.
                      Exits with code 1 on validation errors, 2 on other errors and 0 on success.
+                     \BAt least one rule should be specified.\C
 
 EOF
         ,
