@@ -59,7 +59,7 @@ foreach ($argv as $key => $argument) {
 if ($command === 'help') {
     printFormattedMessageToStream(
         "\BPHP DB Migration Validator\C\n"
-        . "\B--------------------------------\C\n"
+        . "\B--------------------------\C\n"
         . "by Anton Komarev <anton@komarev.com>\n\n",
         STDOUT
     );
@@ -104,8 +104,7 @@ function printUsage(
     $binaryName = basename($binaryPath);
     printFormattedMessageToStream(
         <<<EOF
-Usage:
-  $binaryName \B<command>\C [\Y<path>\C]
+Usage: $binaryName --rule=<rule> \B<path>\C
 
   The following commands are available:
 
@@ -113,7 +112,7 @@ Usage:
 
   Options:
 
-    \Y--rules=<rule>\C   Validates the database migration(s) in the specified \Gpath\C are irreversible.
+    \Y--rules=<rule>\C   Validates the database migration(s) in the specified \G<path>\C are irreversible.
                      The tool will try to check if migration file has `down` method and this method throws an Exception.
                      Exits with code 1 on validation errors, 2 on other errors and 0 on success.
                      \BAt least one rule should be specified.\C
