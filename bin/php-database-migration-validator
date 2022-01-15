@@ -27,7 +27,7 @@ defined('STDERR') or define('STDERR', fopen('php://stderr', 'w'));
 
 $binaryPath = null;
 $command = null;
-$inputPath = null;
+$inputPaths = [];
 $validationRules = [];
 foreach ($argv as $key => $argument) {
     if ($key === 0) {
@@ -53,13 +53,7 @@ foreach ($argv as $key => $argument) {
                 exit(2);
         }
     } else {
-        if ($inputPath === null) {
-            $inputPath = $argument;
-        } else {
-            printError("Too many arguments: $argument");
-            printUsage($binaryPath);
-            exit(2);
-        }
+        $inputPaths[] = $argument;
     }
 }
 
@@ -74,7 +68,7 @@ if ($command === 'help') {
     exit(0);
 }
 
-if ($inputPath === null) {
+if ($inputPaths === []) {
     printError('Missing `path` argument');
     exit(2);
 }
@@ -82,7 +76,7 @@ if ($inputPath === null) {
 foreach ($validationRules as $rule) {
     switch ($rule) {
         case 'irreversible':
-            $exitCode = (new IrreversibleMigrationsValidator())($inputPath);
+            $exitCode = (new IrreversibleMigrationsValidator())($inputPaths);
             exit($exitCode);
         default:
             printError("Unknown validation rule `$rule`");

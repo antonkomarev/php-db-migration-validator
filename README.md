@@ -20,16 +20,34 @@ php composer require antonkomarev/php-database-migration-validator
 
 ### Validate migrations are irreversible
 
-**Validate all files in directory**
+**Validate file**
 
 ```shell
-php vendor/bin/php-database-migration-validator --rule=irreversible database/migrations/
+php vendor/bin/php-database-migration-validator --rule=irreversible migrations/file.php
 ```
 
-**Validate single file**
+**Validate many files**
 
 ```shell
-php vendor/bin/php-database-migration-validator --rule=irreversible database/migrations/example.php
+php vendor/bin/php-database-migration-validator --rule=irreversible migrations/file.php migrations/file2.php
+```
+
+**Validate file by wildcard**
+
+```shell
+php vendor/bin/php-database-migration-validator --rule=irreversible migrations/2022_*
+```
+
+**Validate files in directory**
+
+```shell
+php vendor/bin/php-database-migration-validator --rule=irreversible migrations/
+```
+
+**Validate files in many directories**
+
+```shell
+php vendor/bin/php-database-migration-validator --rule=irreversible app/migrations/ vendor/migrations/
 ```
 
 ## License

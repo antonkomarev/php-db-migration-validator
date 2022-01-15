@@ -21,11 +21,15 @@ final class IrreversibleMigrationsValidator
 
     private const ROLLBACK_MIGRATION_METHOD_NAME = 'down';
 
+    /**
+     * @param array<string> $inputPaths
+     * @return int
+     */
     public function __invoke(
-        string $inputPath
+        array $inputPaths
     ): int {
         try {
-            $filePathList = (new FileFinder())->findInPath($inputPath);
+            $filePathList = (new FileFinder())->findInPaths($inputPaths);
         } catch (Exception $exception) {
             $this->printLine($exception->getMessage());
 
@@ -35,7 +39,8 @@ final class IrreversibleMigrationsValidator
         $filesCount = count($filePathList);
 
         if ($filesCount === 0) {
-            $this->printLine("No migration files found in path `$inputPath`");
+            $implodedFilePaths = implode(',', $filePathList);
+            $this->printLine("No migration files found in paths `$implodedFilePaths`");
 
             return self::EXIT_CODE_ERROR;
         }
