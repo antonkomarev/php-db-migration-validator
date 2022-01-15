@@ -1,6 +1,6 @@
 # PHP DB Migration Validator
 
-![php-db-migration-validator](https://user-images.githubusercontent.com/1849174/149621805-f81bc379-e25e-4f98-8e5c-4102c0cad749.gif)
+![php-db-migration-validator](https://user-images.githubusercontent.com/1849174/149624430-88547f33-9a48-4124-b648-d73c82a6e869.gif)
 
 <p align="center">
 <a href="https://discord.gg/83Yd8MgYp9"><img src="https://img.shields.io/static/v1?logo=discord&label=&message=Discord&color=36393f&style=flat-square" alt="Discord"></a>
