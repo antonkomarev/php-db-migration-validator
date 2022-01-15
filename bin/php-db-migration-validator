@@ -42,7 +42,6 @@ foreach ($argv as $key => $argument) {
                 $command = 'validate';
                 $validationRules[] = $argumentParts[1];
                 break;
-            case '-h':
             case '--help':
             case 'help':
                 $command = 'help';
@@ -107,8 +106,10 @@ function printUsage(
         <<<EOF
 Usage:
   $binaryName \B<command>\C [\Y<path>\C]
+
   The following commands are available:
-    \Bhelp\C  Shows this usage information.
+
+    \Bhelp\C  Shows this usage instructions.
 
   Options:
 
