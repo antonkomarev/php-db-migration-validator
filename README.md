@@ -1,6 +1,6 @@
 # PHP Database Migration Validator
 
-![php-database-migration-validator](https://user-images.githubusercontent.com/1849174/149601314-548f6a06-e870-4893-a3c5-5b259f505bbd.gif)
+![php-database-migration-validator](https://user-images.githubusercontent.com/1849174/149601806-5042c391-7329-45b3-ad3c-9f42e4916a3e.gif)
 
 ## Installation
 

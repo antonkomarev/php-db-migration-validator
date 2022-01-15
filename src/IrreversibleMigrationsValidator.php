@@ -146,7 +146,7 @@ final class IrreversibleMigrationsValidator
 
         if ($statementsCount > 1 || !($statement instanceof Throw_)) {
             throw new DomainException(
-                "Migration `$filePath` should throw an Exception, nothing more"
+                "Migration `$filePath` should throw an Exception in `" . self::ROLLBACK_MIGRATION_METHOD_NAME . "` method, nothing more"
             );
         }
     }
