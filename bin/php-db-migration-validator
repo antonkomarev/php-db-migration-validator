@@ -112,10 +112,10 @@ Usage: $binaryName --rule=<rule> \B<path>\C
 
   Options:
 
-    \Y--rules=<rule>\C   Validates the database migration(s) in the specified \G<path>\C are irreversible.
-                     The tool will try to check if migration file has `down` method and this method throws an Exception.
+    \Y--rules=<rule>\C   Validates the database migration(s) in the specified \G<path>\C.
                      Exits with code 1 on validation errors, 2 on other errors and 0 on success.
-                     \BAt least one rule should be specified.\C
+                     Available rules (\Bat least one should be specified\C):
+                     - \Yirreversible\C — ensure if migration file has `down` method and this method throws an Exception.
 
 EOF
         ,

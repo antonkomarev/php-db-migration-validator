@@ -50,6 +50,28 @@ php vendor/bin/php-db-migration-validator --rule=irreversible migrations/
 php vendor/bin/php-db-migration-validator --rule=irreversible app/migrations/ vendor/migrations/
 ```
 
+### Help
+
+```
+$ php vendor/bin/php-db-migration-validator help
+PHP DB Migration Validator
+--------------------------
+by Anton Komarev <anton@komarev.com>
+
+Usage: php-db-migration-validator --rule=<rule> <path>
+
+  The following commands are available:
+
+    help  Shows this usage instructions.
+
+  Options:
+
+    --rules=<rule>   Validates the database migration(s) in the specified <path>.
+                     Exits with code 1 on validation errors, 2 on other errors and 0 on success.
+                     Available rules (at least one should be specified):
+                     - irreversible — ensure if migration file has `down` method and this method throws an Exception.
+```
+
 ## License
 
 - `PHP DB Migration Validator` package is open-sourced software licensed under the [MIT license](LICENSE) by [Anton Komarev].
