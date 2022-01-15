@@ -15,7 +15,7 @@ In `up` method of migration definition you had to write code which is called onl
 
 It is standard practice to make database migrations irreversible.
 Migrations should be backward compatible and only go forward.
-In Laravel missing or empty `down` method does not prevent rolling back migration.
+In Laravel missing or empty `down` method does not prevent rollback migration.
 Database state would not change, but migration will remove from applied migrations registry and next `php artisan migrate` execution will call `up` method one more time.
 To prevent this behavior all migrations should have `down` method which will throw an Exception, nothing more.
 
