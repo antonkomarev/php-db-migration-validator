@@ -13,6 +13,7 @@ use PhpParser\Node\Stmt\ClassMethod;
 use PhpParser\Node\Stmt\Throw_;
 use PhpParser\NodeFinder;
 use PhpParser\ParserFactory;
+use RuntimeException;
 
 final class IrreversibleMigrationsValidator
 {
@@ -22,45 +23,44 @@ final class IrreversibleMigrationsValidator
     private const ROLLBACK_MIGRATION_METHOD_NAME = 'down';
 
     public function __invoke(
-        string $migrationsDirectoryPath
+        string $inputPath
     ): int {
-        $migrationsDirectoryPath = rtrim($migrationsDirectoryPath, '/');
-
-        if (is_dir($migrationsDirectoryPath) === false) {
-            $this->printLine("Migrations directory path `$migrationsDirectoryPath` is not a directory");
+        try {
+            $filePathList = $this->listFilePaths($inputPath);
+        } catch (Exception $exception) {
+            $this->printLine($exception->getMessage());
 
             return self::EXIT_CODE_ERROR;
         }
 
-        $fileNameList = $this->listFileNames($migrationsDirectoryPath);
+        $filesCount = count($filePathList);
 
-        $filesCount = count($fileNameList);
+        if ($filesCount === 0) {
+            $this->printLine("No migration files found in path `$inputPath`");
+
+            return self::EXIT_CODE_ERROR;
+        }
+
         $errorsCount = 0;
 
-        foreach ($fileNameList as $fileName) {
-            $filePath = $this->resolveFilePath($migrationsDirectoryPath, $fileName);
-            $fileCode = $this->getFileCode($filePath);
-
+        foreach ($filePathList as $filePath) {
             try {
-                $this->analyzeMigrationFileCode($filePath, $fileCode);
+                $this->validateMigrationFile($filePath);
             } catch (Exception $exception) {
                 $this->printLine($exception->getMessage());
                 $errorsCount++;
             }
         }
 
-        if ($filesCount === 0) {
-            $this->printLine("No migration files found in path `$migrationsDirectoryPath`");
-
-            return self::EXIT_CODE_ERROR;
+        if ($errorsCount > 0) {
+            $this->printLineSeparator();
         }
 
-        $this->printLine(str_pad('', 20, '-'));
         $this->printLine("Files analyzed: $filesCount");
         $this->printLine("Errors count: $errorsCount");
 
         if ($errorsCount > 0) {
-            $this->printLine(str_pad('', 20, '-'));
+            $this->printLineSeparator();
             $this->printRollbackCodeExample();
             return self::EXIT_CODE_ERROR;
         }
@@ -69,15 +69,31 @@ final class IrreversibleMigrationsValidator
     }
 
     /**
-     * @param string $fileDirectoryPath
+     * @param string $inputPath
      * @return array<string>
      */
-    private function listFileNames(
-        string $fileDirectoryPath
+    private function listFilePaths(
+        string $inputPath
     ): array {
-        $fileNameList = scandir($fileDirectoryPath);
+        if (file_exists($inputPath) === false) {
+            throw new RuntimeException(
+                "Migration path `$inputPath` is not a directory or file"
+            );
+        }
 
-        return $this->filterMigrationFiles($fileNameList);
+        if (is_file($inputPath)) {
+            return [
+                $inputPath,
+            ];
+        }
+
+        $inputPath = rtrim($inputPath, '/');
+
+        $fileNameList = scandir($inputPath);
+
+        $fileNameList = $this->filterMigrationFiles($fileNameList);
+
+        return $this->prependDirectoryPathToFileNameList($fileNameList, $inputPath);
     }
 
     /**
@@ -104,9 +120,27 @@ final class IrreversibleMigrationsValidator
         return $result;
     }
 
-    private function resolveFilePath(
-        string $fileDirectoryPath,
-        string $fileName
+    /**
+     * @param array<string> $fileNameList
+     * @param string $directoryPath
+     * @return array<string>
+     */
+    private function prependDirectoryPathToFileNameList(
+        array $fileNameList,
+        string $directoryPath
+    ): array {
+        $filePathList = [];
+
+        foreach ($fileNameList as $fileName) {
+            $filePathList[] = $this->prependDirectoryPath($fileName, $directoryPath);
+        }
+
+        return $filePathList;
+    }
+
+    private function prependDirectoryPath(
+        string $fileName,
+        string $fileDirectoryPath
     ): string {
         return $fileDirectoryPath . '/' . $fileName;
     }
@@ -117,10 +151,10 @@ final class IrreversibleMigrationsValidator
         return file_get_contents($filePath);
     }
 
-    private function analyzeMigrationFileCode(
-        string $filePath,
-        string $fileCode
+    private function validateMigrationFile(
+        string $filePath
     ): void {
+        $fileCode = $this->getFileCode($filePath);
         $statements = $this->parseFileCode($filePath, $fileCode);
         $methods = $this->findClassMethods($statements);
 
@@ -202,9 +236,10 @@ final class IrreversibleMigrationsValidator
     private function printRollbackCodeExample(): void
     {
         $methodName = self::ROLLBACK_MIGRATION_METHOD_NAME;
-        $this->printLine("Each irreversible migration file should have following code:" . PHP_EOL);
+        $this->printLine('Each irreversible migration file should have following code:');
+        $this->printLine('');
         $this->printLine(
-<<<EXAMPLE
+            <<<EXAMPLE
 public function $methodName(): void
 {
     throw new \Exception('This migration is irreversible and cannot be reverted.');
@@ -217,6 +252,11 @@ EXAMPLE
         string $message
     ): void {
         echo $message . PHP_EOL;
+    }
+
+    private function printLineSeparator(): void
+    {
+        $this->printLine(str_pad('', 20, '-'));
     }
 
     /**
