@@ -1,7 +1,7 @@
 #!/usr/bin/env php
 <?php
 
-use AK\DatabaseMigrationValidator\IrreversibleMigrationsValidator;
+use AK\DbMigrationValidator\IrreversibleMigrationsValidator;
 
 if (!in_array(PHP_SAPI, ['cli', 'phpdbg', 'embed'], true)) {
     echo 'Warning: The console should be invoked via the CLI version of PHP, not the ' . PHP_SAPI . ' SAPI' . PHP_EOL;
@@ -59,7 +59,7 @@ foreach ($argv as $key => $argument) {
 
 if ($command === 'help') {
     printFormattedMessageToStream(
-        "\BPHP Database Migration Validator\C\n"
+        "\BPHP DB Migration Validator\C\n"
         . "\B--------------------------------\C\n"
         . "by Anton Komarev <anton@komarev.com>\n\n",
         STDOUT

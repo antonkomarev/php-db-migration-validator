@@ -1,4 +1,4 @@
-# Contributing to PHP Database Migration Validator
+# Contributing to PHP DB Migration Validator
 
 Please note that this project is released with a [Contributor Code of Conduct](CODE_OF_CONDUCT.md). By participating in this project you agree to abide by its terms.
 
@@ -29,4 +29,4 @@ If you notice compliance oversights, please send a patch via pull request.
 [PSR-1]: https://github.com/php-fig/fig-standards/blob/master/accepted/PSR-1-basic-coding-standard.md
 [PSR-4]: https://github.com/php-fig/fig-standards/blob/master/accepted/PSR-4-autoloader.md
 [PSR-12]: https://github.com/php-fig/fig-standards/blob/master/accepted/PSR-12-extended-coding-style-guide.md
-[General problems]: https://github.com/antonkomarev/php-database-migration-validator/issues
+[General problems]: https://github.com/antonkomarev/php-db-migration-validator/issues

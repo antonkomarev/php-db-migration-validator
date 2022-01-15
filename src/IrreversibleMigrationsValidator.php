@@ -2,7 +2,7 @@
 
 declare(strict_types=1);
 
-namespace AK\DatabaseMigrationValidator;
+namespace AK\DbMigrationValidator;
 
 use DomainException;
 use Exception;
