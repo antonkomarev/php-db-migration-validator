@@ -201,10 +201,11 @@ final class IrreversibleMigrationsValidator
 
     private function printRollbackCodeExample(): void
     {
+        $methodName = self::ROLLBACK_MIGRATION_METHOD_NAME;
         $this->printLine("Each irreversible migration file should have following code:" . PHP_EOL);
         $this->printLine(
-            <<<EXAMPLE
-public function down(): void
+<<<EXAMPLE
+public function $methodName(): void
 {
     throw new \Exception('This migration is irreversible and cannot be reverted.');
 }
