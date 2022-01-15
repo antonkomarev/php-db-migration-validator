@@ -28,64 +28,96 @@ defined('STDERR') or define('STDERR', fopen('php://stderr', 'w'));
 $binaryPath = null;
 $command = null;
 $inputPath = null;
+$validationRules = [];
 foreach ($argv as $key => $argument) {
     if ($key === 0) {
         $binaryPath = $argument;
         continue;
     }
 
-    if ($key === 1) {
-        $command = $argument;
-        continue;
-    }
-
-    if ($key === 2) {
-        $inputPath = $argument;
+    if ($argument[0] === '-' || $argument === 'help') {
+        $argumentParts = explode('=', $argument);
+        switch($argumentParts[0]) {
+            case '--rule':
+                $command = 'validate';
+                $validationRules[] = $argumentParts[1];
+                break;
+            case '-h':
+            case '--help':
+            case 'help':
+                $command = 'help';
+                break;
+            default:
+                printError("Unknown argument " . $argumentParts[0]);
+                printUsage($binaryPath);
+                exit(2);
+        }
+    } else {
+        if ($inputPath === null) {
+            $inputPath = $argument;
+        } else {
+            printError("Too many arguments: $argument");
+            printUsage($binaryPath);
+            exit(2);
+        }
     }
 }
 
-switch ($command) {
-    case 'irreversible':
-        if ($inputPath === null) {
-            printError('Missing `input-path` argument');
-            exit(2);
-        }
+if ($command === 'help') {
+    printFormattedMessageToStream(
+        "\BPHP Database Migration Validator\C\n"
+        . "\B--------------------------------\C\n"
+        . "by Anton Komarev <anton@komarev.com>\n\n",
+        STDOUT
+    );
+    printUsage($binaryPath, STDOUT);
+    exit(0);
+}
 
-        $exitCode = (new IrreversibleMigrationsValidator())($inputPath);
-        exit($exitCode);
-    case 'help':
-        usage($binaryPath);
-        exit(0);
-    case null:
-        printError('No command specified.');
-        usage($binaryPath);
-        exit(2);
-    default:
-        printError("Unknown command `$command`");
-        usage($binaryPath);
-        exit(2);
+if ($inputPath === null) {
+    printError('Missing `path` argument');
+    exit(2);
+}
+
+foreach ($validationRules as $rule) {
+    switch ($rule) {
+        case 'irreversible':
+            $exitCode = (new IrreversibleMigrationsValidator())($inputPath);
+            exit($exitCode);
+        default:
+            printError("Unknown validation rule `$rule`");
+            exit(2);
+    }
 }
 
 /**
- * Display usage information.
+ * Display usage instructions.
+ *
+ * @param string $binaryPath
+ * @param resource|null $stream
+ * @return void
  */
-function usage(
-    string $binaryPath
+function printUsage(
+    string $binaryPath,
+    $stream = null
 ): void {
     $binaryName = basename($binaryPath);
     printFormattedMessageToStream(
         <<<EOF
 Usage:
-  $binaryName \B<command>\C [\Y<input-path>\C]
+  $binaryName \B<command>\C [\Y<path>\C]
   The following commands are available:
-    \Birreversible\C  Validates the database migration(s) in the specified \Ginput-path\C are irreversible.
-                  The tool will try to check if migration file has `down` method and this method throws an Exception.
-                  Exits with code 1 on validation errors, 2 on other errors and 0 on success.
-    \Bhelp\C          Shows this usage information.
+    \Bhelp\C  Shows this usage information.
+
+  Options:
+
+    \Y--rules=<rule>\C   Validates the database migration(s) in the specified \Gpath\C are irreversible.
+                     The tool will try to check if migration file has `down` method and this method throws an Exception.
+                     Exits with code 1 on validation errors, 2 on other errors and 0 on success.
 
 EOF
         ,
-        STDERR
+        $stream ?? STDERR
     );
 }
 
