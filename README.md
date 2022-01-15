@@ -10,7 +10,7 @@
 
 ## Introduction
 
-In modern frameworks migrations usually have `up` and `down` methods.
+In modern frameworks such as Symfony and Laravel, migrations usually have `up` and `down` methods.
 In `up` method of migration definition you had to write code which is called only on running migration forward and in `down` — the code which is called only on rolling migration back.
 
 It is standard practice to make database migrations irreversible.
