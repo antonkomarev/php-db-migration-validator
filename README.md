@@ -67,7 +67,7 @@ php vendor/bin/php-db-migration-validator --rule=irreversible app/migrations/ ve
 
 ### CI automation
 
-Automation of checks and validation of all contributions to the repository is one of the possible ways to use this tool.
+Automating the validation of all contributions to the repository is one of the possible ways to use this tool.
 
 #### GitHub Action
 
