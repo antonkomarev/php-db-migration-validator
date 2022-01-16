@@ -39,8 +39,10 @@ final class IrreversibleMigrationsValidator
         $filesCount = count($filePathList);
 
         if ($filesCount === 0) {
-            $implodedFilePaths = implode(',', $filePathList);
-            $this->printLine("No migration files found in paths `$implodedFilePaths`");
+            $this->printLine("No migration files found in paths:");
+            foreach ($inputPaths as $inputPath) {
+                $this->printLine('- ' . $inputPath);
+            }
 
             return self::EXIT_CODE_ERROR;
         }
