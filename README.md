@@ -77,22 +77,22 @@ Create file `.github/workflows/db-migration-validation.yaml` in the application 
 name: DB Migration Validation
 
 on:
-  push:
+    push:
 
 jobs:
-  db-migration-validation:
-    runs-on: ubuntu-latest
-    steps:
-      - uses: actions/checkout@v2
-      - uses: shivammathur/setup-php@v2
-        with:
-          php-version: 7.4
-          extensions: tokenizer
-          coverage: none
-      - name: Install PHP DB Migration Validator dependency
-        run: composer require antonkomarev/php-db-migration-validator --no-interaction
-      - name: Ensure all database migrations are irreversible
-        run: vendor/bin/php-db-migration-validator --rule=irreversible ./database/migrations
+    db-migration-validation:
+        runs-on: ubuntu-latest
+        steps:
+            - uses: actions/checkout@v2
+            - uses: shivammathur/setup-php@v2
+              with:
+                  php-version: 8.1
+                  extensions: tokenizer
+                  coverage: none
+            - name: Install PHP DB Migration Validator dependency
+              run: composer global require antonkomarev/php-db-migration-validator --no-interaction
+            - name: Ensure all database migrations are irreversible
+              run: php-db-migration-validator --rule=irreversible ./database/migrations
 ```
 
 ### Command usage instructions
