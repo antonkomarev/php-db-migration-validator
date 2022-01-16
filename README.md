@@ -65,10 +65,40 @@ php vendor/bin/php-db-migration-validator --rule=irreversible migrations/
 php vendor/bin/php-db-migration-validator --rule=irreversible app/migrations/ vendor/migrations/
 ```
 
-### Help
+## CI automation
+
+Automation of checks and validation of all contributions to the repository is one of the possible ways to use this tool.
+
+### GitHub Action
+
+Create file `.github/workflows/db-migration-validation.yaml` in the application repository.
+
+```yaml
+name: DB Migration Validation
+
+on:
+  push:
+
+jobs:
+  db-migration-validation:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v2
+      - uses: shivammathur/setup-php@v2
+        with:
+          php-version: 7.4
+          extensions: tokenizer
+          coverage: none
+      - name: Install PHP DB Migration Validator dependency
+        run: composer require antonkomarev/php-db-migration-validator --no-interaction
+      - name: Ensure all database migrations are irreversible
+        run: vendor/bin/php-db-migration-validator --rule=irreversible ./database/migrations
+```
+
+### Command usage instructions
 
 ```
-$ php vendor/bin/php-db-migration-validator help
+$ php vendor/bin/php-db-migration-validator --help
 PHP DB Migration Validator
 --------------------------
 by Anton Komarev <anton@komarev.com>
