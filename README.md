@@ -65,11 +65,11 @@ php vendor/bin/php-db-migration-validator --rule=irreversible migrations/
 php vendor/bin/php-db-migration-validator --rule=irreversible app/migrations/ vendor/migrations/
 ```
 
-## CI automation
+### CI automation
 
 Automation of checks and validation of all contributions to the repository is one of the possible ways to use this tool.
 
-### GitHub Action
+#### GitHub Action
 
 Create file `.github/workflows/db-migration-validation.yaml` in the application repository.
 
