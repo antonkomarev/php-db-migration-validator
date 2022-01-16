@@ -121,6 +121,10 @@ Usage: php-db-migration-validator --rule=<rule> <path>
 
 - `PHP DB Migration Validator` package is open-sourced software licensed under the [MIT license](LICENSE) by [Anton Komarev].
 
+## Support the project
+
+If you'd like to support the development of PHP DB Migration Validator, then please consider [sponsoring me]. Thanks so much!
+
 ## About CyberCog
 
 [CyberCog] is a Social Unity of enthusiasts. Research the best solutions in product & software development is our passion.
@@ -131,3 +135,4 @@ Usage: php-db-migration-validator --rule=<rule> <path>
 
 [Anton Komarev]: https://komarev.com
 [CyberCog]: https://cybercog.su
+[sponsoring me]: https://paypal.me/antonkomarev
