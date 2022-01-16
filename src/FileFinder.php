@@ -48,7 +48,8 @@ final class FileFinder
         string $inputPath
     ): array {
         if (is_dir($inputPath)) {
-            $inputPath .= '*.php';
+            $inputPath = rtrim($inputPath, '/');
+            $inputPath .= '/*.php';
         }
 
         return glob($inputPath);
